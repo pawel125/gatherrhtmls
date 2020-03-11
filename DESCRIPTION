@@ -1,13 +1,22 @@
 Package: gatherrhtmls
-Title: What the Package Does (One Line, Title Case)
+Title: Pick up multiple HTML reports into a single website
 Version: 0.0.0.9000
 Authors@R: 
-    person(given = "First",
-           family = "Last",
+    person(given = "Paweł",
+           family = "Kuś",
            role = c("aut", "cre"),
-           email = "first.last@example.com",
-           comment = c(ORCID = "YOUR-ORCID-ID"))
-Description: What the package does (one paragraph).
-License: What license it uses
+           email = "kpawel2210@gmail.com",
+           comment = c(ORCID = "0000-0002-4367-9821"))
+Description: Pick up multiple HTML reports into a website with an elegant
+    sidebar navigation.
+License: GNU GPLv3
 Encoding: UTF-8
 LazyData: true
+URL: https://github.com/pawel125/gatherrhtmls
+BugReports: https://github.com/pawel125/gatherrhtmls/issues
+Imports: 
+    dplyr,
+    purrr,
+    stringr,
+    magrittr
+RoxygenNote: 7.0.2

@@ -1,0 +1,59 @@
+@import url('https://fonts.googleapis.com/css?family=Josefin+Sans&display=swap');
+
+.main-container {
+  max-width: 940px;
+  margin-left: 350px;
+  margin-right: auto;
+}
+
+.rmaker-container *{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  text-decoration: none;
+  font-family: 'Josefin Sans', sans-serif;
+}
+
+body{
+   background-color: #f3f5f9;
+}
+
+.rmaker-container{
+  display: flex;
+  position: relative;
+}
+
+.rmaker-container .rmaker-sidebar{
+  width: 270px;
+  height: 100%;
+  background: #4b4276;
+  padding: 30px 0px;
+  position: fixed;
+  overflow: scroll;
+}
+	
+.rmaker-container .rmaker-sidebar ol li{
+  border-bottom: 1px solid #bdb8d7;
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+  border-top: 1px solid rgba(255,255,255,0.05);
+} 
+
+.rmaker-container .rmaker-sidebar ol li ul li a{
+  margin-left: 20px;
+  padding: 8px;
+  color: #aaa;
+}    
+
+.rmaker-container .rmaker-sidebar ol li a{
+  padding: 15px;
+  color: #ffffff;
+  display: block;
+}
+
+.rmaker-container .rmaker-sidebar ol li:hover{
+  background-color: #594f8d;
+}
+    
+.rmaker-container .rmaker-sidebar ol li:hover a{
+  color: #fff;
+}
