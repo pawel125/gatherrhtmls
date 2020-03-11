@@ -109,7 +109,8 @@ gather <- function(files = NULL, output_dir = "report") {
   })
 
   dir.create(output_dir, recursive = T)
-  file.copy("inst/resources/styles.css", sprintf("%s/styles.css", output_dir))
+  css_file <- system.file("resources", "styles.css", package = "gatherrhtmls")
+  file.copy(css_file, sprintf("%s/styles.css", output_dir))
   walk2(reports$final, reports$output_files,
         ~write_file(.x, path = str_c(output_dir, .y, sep = "/"))
   )
