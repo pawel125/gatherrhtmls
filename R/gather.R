@@ -108,7 +108,7 @@ gather <- function(files = NULL, output_dir = "report") {
       str_replace("</head>", nav_menu)
   })
 
-  dir.create(output_dir)
+  dir.create(output_dir, recursive = T)
   file.copy("inst/resources/styles.css", sprintf("%s/styles.css", output_dir))
   walk2(reports$final, reports$output_files,
         ~write_file(.x, path = str_c(output_dir, .y, sep = "/"))
