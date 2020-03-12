@@ -1,6 +1,6 @@
 Package: gatherrhtmls
 Title: Pick up multiple HTML reports into a single website
-Version: 0.0.0.9000
+Version: 0.0.0.9001
 Authors@R: 
     person(given = "Paweł",
            family = "Kuś",
@@ -18,5 +18,6 @@ Imports:
     dplyr,
     purrr,
     stringr,
-    magrittr
+    magrittr,
+    yaml
 RoxygenNote: 7.0.2

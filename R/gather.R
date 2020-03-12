@@ -3,6 +3,7 @@
 #' @import purrr
 #' @import dplyr
 #' @import readr
+#' @importFrom yaml read_yaml
 
 read_report_file <- function(path) {
   read_file(path) %>%
@@ -35,12 +36,16 @@ get_content_data <- function(html) {
 }
 
 #' @export
-gather <- function(files = NULL, output_dir = "report") {
-  if (is.null(files)) {
-    files <- get_htmls(".")
+gather <- function(files = NULL, output_dir = NULL,
+                   gatherrhtmls_file = "_gatherrhtmls.yaml") {
+
+  settings <- if (file.exists(gatherrhtmls_file)) {
+    read_yaml(gatherrhtmls_file)
+  } else {
+    list(files = get_htmls(), output_dir = "report")
   }
 
-  reports <- tibble(files)
+  reports <- tibble(files = settings$files)
   reports <- reports %>%
     mutate(
       nr = row_number(),
@@ -108,10 +113,10 @@ gather <- function(files = NULL, output_dir = "report") {
       str_replace("</head>", nav_menu)
   })
 
-  dir.create(output_dir, recursive = T)
+  dir.create(settings$output_dir, recursive = T)
   css_file <- system.file("resources", "styles.css", package = "gatherrhtmls")
-  file.copy(css_file, sprintf("%s/styles.css", output_dir))
+  file.copy(css_file, sprintf("%s/styles.css", settings$output_dir))
   walk2(reports$final, reports$output_files,
-        ~write_file(.x, path = str_c(output_dir, .y, sep = "/"))
+        ~write_file(.x, path = str_c(settings$output_dir, .y, sep = "/"))
   )
 }
