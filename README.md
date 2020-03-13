@@ -25,3 +25,9 @@ librarry(gatherrhtmls)
 files <- get_htmls()  # get all html reports in the working directory and its subdirectories
 gater(files, path = "reposr") # to gather it
 ```
+
+TODO
+----
+
+* 'title' field in configuration file, for the top label in the navigation menu
+* recognize kind of *PART* markers in the configuration file, to be input into the navigation menu without any link

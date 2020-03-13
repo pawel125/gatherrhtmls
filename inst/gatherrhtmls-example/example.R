@@ -5,3 +5,6 @@ gather(files, output_dir = "report")
 
 # or simply to gather all reports in the project directory
 gather(output_dir = "report")
+
+#
+generate_yaml()
