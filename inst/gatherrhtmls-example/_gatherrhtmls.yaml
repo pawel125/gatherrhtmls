@@ -1,0 +1,7 @@
+title: Raport
+data:
+- analysis_1/analysis1.html
+- (PART) RNAseq
+- analysis_2/analiza2.html
+- analysis_3/nb.html
+output_dir: report
