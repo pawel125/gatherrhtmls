@@ -35,6 +35,32 @@ get_content_data <- function(html) {
   }
 }
 
+create_simple_nav_item <- function(nr, title, ref) {
+  sprintf('<p class="gatherrhtmls-raport"><a href="%s"><b>%s. </b>%s</a></p>',
+          ref, nr, title)
+}
+
+create_complex_nav_item <- function(nr, title, ref, content) {
+  subitems <- pmap_chr(content, function(tag_id, title, ...) {
+    sprintf('<p class="gatherrhtmls-section"><a href="#%s">%s</a></p>', tag_id, title)
+  })
+  str_c(
+    '<div>',
+    create_simple_nav_item(nr, title, ref),
+    str_c(subitems, collapse = "\n"),
+    '</div>',
+    sep = "\n"
+  )
+}
+
+create_nav_item <- function(content, nr, title, output_files, ...) {
+  if(is.null(content)) {
+    create_simple_nav_item(nr, title, output_files)
+  } else {
+    create_complex_nav_item(nr, title, output_files, content)
+  }
+}
+
 #' Gathers multiple HTML files into single website
 #'
 #' Gathers multiple HTML files into single website. Searches for <title> and
@@ -69,55 +95,50 @@ gather <- function(files = NULL, output_dir = NULL,
     list(files = get_htmls(), output_dir = "report")
   }
 
-  reports <- tibble(files = settings$files)
-  reports <- reports %>%
+  general <- tibble(
+    item = settings$data,
+    type = if_else(str_detect(item, "(PART)"), "part header", "file")
+  )
+
+  reports <- general %>%
+    filter(type == "file") %>%
     mutate(
+      files = item,
       nr = row_number(),
       output_files = str_replace_all(files, "/", "_"),
       html = map(files, read_report_file),
       title = map(html, ~drop_xml(extract_tags(.x, "<title>"))),
       content = map(html, get_content_data)
     )
-
-  create_simple_nav_item <- function(nr, title, ref) {
-    sprintf('<li><a href="%s"><b>%s. </b>%s</a></li>',
-            ref, nr, title)
-  }
-
-  create_complex_nav_item <- function(nr, title, ref, content) {
-    subitems <- pmap_chr(content, function(tag_id, title, ...) {
-      sprintf('    <li><a href="#%s">%s</a></li>', tag_id, title)
-    })
-    str_c(
-      sprintf('<li><a href=%s><b>%s. </b>%s</a>', ref, nr, title),
-      '  <ul>',
-      str_c(subitems, collapse = "\n"),
-      '  </ul>',
-      '</li>',
-      sep = "\n"
-    )
-  }
-
-  create_nav_item <- function(content, nr, title, output_files, ...) {
-    if(is.null(content)) {
-      create_simple_nav_item(nr, title, output_files)
-    } else {
-      create_complex_nav_item(nr, title, output_files, content)
-    }
-  }
-
   reports$nav_items <- pmap(reports, create_nav_item)
 
+  parts <- general %>%
+    filter(type == "part header") %>%
+    mutate(
+      header = item %>% str_replace("\\(PART\\)", "") %>% str_trim(),
+      nav_items = str_c('<b class="gatherrhtmls-part">', header, '</b>')
+    )
+
+  nav_items <- general %>%
+    left_join(
+      rbind(
+      select(reports, item, nav_items),
+      select(parts, item, nav_items)
+    )
+  )
+
+  nav_title <- sprintf(
+    '<p class="gatherrhtmls-title"><b>%s</b></p>', settings$title
+  )
   nav_menu <- str_c(
     '  <link href="styles.css" rel="stylesheet" />',
-    '  <div class="rmaker-container">',
-    '    <div class="rmaker-sidebar">',
-    '      <nav>',
-    '        <ol>',
-    str_c("          ", reports$nav_items, collapse = "\n"),
-    '        </ol>',
-    '      </nav>',
-    '    </div>',
+    '  <div class="gatherrhtmls-container">',
+    '    <nav>',
+    '      <div class="gatherrhtmls-sidebar">',
+    nav_title,
+    str_c("        ", nav_items$nav_items, collapse = "\n"),
+    '      </div>',
+    '    </nav>',
     '  </div>',
     '</head>',
     sep = "\n"

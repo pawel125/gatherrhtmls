@@ -1,6 +1,6 @@
 Package: gatherrhtmls
 Title: Pick up multiple HTML reports into a single website
-Version: 0.0.0.9001
+Version: 0.0.2.0000
 Authors@R: 
     person(given = "Paweł",
            family = "Kuś",
