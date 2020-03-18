@@ -86,15 +86,26 @@ create_nav_item <- function(content, nr, title, output_files, ...) {
 #' gather(files = c("raport1.html", "analysis2.html"), output_dir = "final")
 #'
 #' @export
-gather <- function(files = NULL, output_dir = NULL,
+gather <- function(files = NULL, output_dir = NULL, title = NULL,
                    gatherrhtmls_file = "_gatherrhtmls.yaml") {
 
+  # read configuration file if exist
   settings <- if (file.exists(gatherrhtmls_file)) {
     read_yaml(gatherrhtmls_file)
   } else {
-    list(files = get_htmls(), output_dir = "report")
+    list()
   }
+  # overwrite with function arguments if supplied
+  if (!is.null(title)) settings$title <- title
+  if (!is.null(data)) settings$data <- files
+  if (!is.null(output_dir)) settings$output_dir <- output_dir
 
+  # use default if NULL
+  if (is.null(settings$title)) settings$title <- "Raport"
+  if (is.null(settings$data)) settings$data <- get_htmls()
+  if (is.null(settings$output_dir)) settings$output_dir <- "raport"
+
+  # gather...
   general <- tibble(
     item = settings$data,
     type = if_else(str_detect(item, "(PART)"), "part header", "file")
